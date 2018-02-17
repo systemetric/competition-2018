@@ -29,9 +29,6 @@ SPEED_100 = 1.7 * SPEED_50 * 1.25
 SPEED_ANGULAR_30 = 360 / 4.25
 
 
-markers = []
-
-
 class Robot(sr.robot.Robot):
     def __init__(self):
         super(Robot, self).__init__()
