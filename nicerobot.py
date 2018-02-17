@@ -63,6 +63,14 @@ class Robot(sr.robot.Robot):
         self.servos[SERVO_RIGHT] = 0
         self.servos[SERVO_LEFT] = 0
 
+    def see(self, *args, **kwargs):
+        # Workaround for bug in sr.robot where the default resolution
+        # causes an exception to be raised.
+        DEFAULT_RESOLUTION = (640, 480)
+        if len(args) < 3 and "res" not in kwargs:
+            kwargs.update({"res": DEFAULT_RESOLUTION})
+        return super(Robot, self).see(*args, **kwargs)
+
     def pickup_cube(self):
         self.servos[SERVO_ARM] = -100
         time.sleep(1)
