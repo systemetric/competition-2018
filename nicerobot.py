@@ -34,7 +34,7 @@ markers = []
 
 class Robot(sr.robot.Robot):
     def __init__(self):
-        super(Robot, self).__init__(init=False)
+        super(Robot, self).__init__()
 
         self.gpio.pin_mode(GPIO_GATE, OUTPUT)
         self.gpio.pin_mode(GPIO_PUMP, OUTPUT)
