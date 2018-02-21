@@ -7,6 +7,10 @@ from sr.robot import (
 )
 
 __all__ = [
+    # Our public API
+    "Robot",
+    "TOKEN", "BUCKET",
+    # SR's API
     "MARKER_ARENA", "MARKER_TOKEN", "MARKER_BUCKET_SIDE", "MARKER_BUCKET_END",
     "INPUT", "OUTPUT", "INPUT_ANALOG", "INPUT_PULLUP",
 ]
