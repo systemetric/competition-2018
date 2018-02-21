@@ -107,7 +107,6 @@ class Robot(sr.robot.Robot):
                 time.sleep(0.3)
                 self.move(dest.dist)
                 return
-            # no good markers visible
             print("Didn't find any acceptable markers, turning to try again")
             self.turn(45)
             time.sleep(0.3)
