@@ -6,18 +6,23 @@ import time
 import weakref
 
 import sr.robot
-from sr.robot import (
-    INPUT, OUTPUT, INPUT_ANALOG, INPUT_PULLUP,
-    MARKER_ARENA, MARKER_TOKEN, MARKER_BUCKET_SIDE, MARKER_BUCKET_END
-)
+from sr.robot import (INPUT, OUTPUT, INPUT_ANALOG, INPUT_PULLUP, MARKER_ARENA,
+                      MARKER_TOKEN, MARKER_BUCKET_SIDE, MARKER_BUCKET_END)
 
 __all__ = [
     # Our public API
     "Robot",
-    "TOKEN", "BUCKET",
+    "TOKEN",
+    "BUCKET",
     # SR's API
-    "MARKER_ARENA", "MARKER_TOKEN", "MARKER_BUCKET_SIDE", "MARKER_BUCKET_END",
-    "INPUT", "OUTPUT", "INPUT_ANALOG", "INPUT_PULLUP",
+    "MARKER_ARENA",
+    "MARKER_TOKEN",
+    "MARKER_BUCKET_SIDE",
+    "MARKER_BUCKET_END",
+    "INPUT",
+    "OUTPUT",
+    "INPUT_ANALOG",
+    "INPUT_PULLUP",
 ]
 
 TOKEN = object()
@@ -30,7 +35,9 @@ def _make_servo_property(servo_num, docstring=None):
 
     def setter(self, value):
         if not (-100 <= value <= 100):
-            raise ValueError("Servo power must be in the range -100 to 100 (given: {})".format(value))
+            raise ValueError(
+                "Servo power must be in the range -100 to 100 (given: {})".
+                format(value))
         self.servos[servo_num] = value
 
     return property(getter, setter, doc=docstring)
@@ -81,6 +88,7 @@ class GPIO(object):
 
     def _set_mode(self, mode):
         self._gpio.pin_mode(self._pin, mode)
+
     mode = property(None, _set_mode)
 
 
@@ -136,11 +144,13 @@ class Robot(sr.robot.Robot):
     GPIO_PUMP = 2
 
     MULTIPLIER_LEFT = -1
-    MULTIPLIER_RIGHT = 0.95  # 0.91
+    MULTIPLIER_RIGHT = 0.82  # 0.91
 
-    SPEED_50 = 1.25 / 3
+    SPEED_50 = 2.5 / 5  # 1.25 / 3
     SPEED_100 = 1.7 * SPEED_50 * 1.25
     SPEED_ANGULAR_30 = 360 / 4.25
+
+    STARTUP_TIME = 1.5  #1.7
 
     def __init__(self):
         super(Robot, self).__init__()
@@ -162,6 +172,7 @@ class Robot(sr.robot.Robot):
         self.left_wheel = self.MULTIPLIER_LEFT * 50
         self.right_wheel = self.MULTIPLIER_RIGHT * 50
 
+        time.sleep(self.STARTUP_TIME)
         time.sleep(distance / self.SPEED_50)
 
         self.right_wheel = 0
@@ -216,12 +227,13 @@ class Robot(sr.robot.Robot):
 
         while True:
             markers = self.see()
-            acceptable_markers = [m for m in markers if m.info.marker_type in acceptable_types]
+            acceptable_markers = [
+                m for m in markers if m.info.marker_type in acceptable_types
+            ]
             if acceptable_markers:
                 dest = acceptable_markers[0]
                 print("Found marker {} (dist {}, rot_y {})".format(
-                    dest.info.code, dest.dist, dest.rot_y
-                ))
+                    dest.info.code, dest.dist, dest.rot_y))
                 self.turn(dest.rot_y)
                 time.sleep(0.3)
                 self.move(dest.dist)
